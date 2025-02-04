@@ -134,11 +134,22 @@ const QuizPage = () => {
 
     return (
         <div className="quiz">
+            <div className="header">
+                <img src={`${process.env.PUBLIC_URL}/logoNH.png`} alt="Logo" className="logo" />
+                <h1 className="site-title">Trường THPT Nguyễn Hiền</h1>
+            </div>
+
+
             <div className="container">
+                <div className="hat-container">
+                    <img src={`${process.env.PUBLIC_URL}/hat.png`} alt="Hat" className="hat-image" />
+                </div>
                 <button className="music-control" onClick={() => setIsPlaying(!isPlaying)}>
                     {isPlaying ? <FaVolumeUp /> : <FaVolumeMute />}
                 </button>
-
+                <div className="content_title">
+                    Chiếc nón phân loại
+                </div>
                 <div className="numbers">
                     {questions.map((_, index) => (
                         <span

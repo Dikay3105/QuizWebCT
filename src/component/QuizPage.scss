@@ -5,25 +5,78 @@ body {
     background-color: #1a1a1a;
     color: #d4af37;
     text-align: center;
-    padding: 20px;
+    background-image: url("../../public/harry2.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .quiz {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 90vh;
+    height: 100vh;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100vw - 40px);
+    padding: 10px 20px 10px 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 2px 5px rgba(255, 215, 0, 0.5);
+}
+
+.logo {
+    width: 50px;
+    /* Điều chỉnh kích thước logo */
+    height: 50px;
+    margin-right: 15px;
+}
+
+.site-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #d4af37;
+    text-shadow: 2px 2px 5px black;
+}
+
+.hat-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.hat-image {
+    position: absolute;
+    top: -230px;
+    width: 300px;
+    z-index: 10;
+}
+
+.content_title {
+    margin-top: 20px;
+    color: #b22222;
+    font-weight: bold;
+    font-size: 30px;
 }
 
 .container {
     width: 80%;
     max-width: 600px;
+    min-height: 370px;
     margin: auto;
     background: rgba(0, 0, 0, 0.8);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .question {
@@ -42,6 +95,10 @@ body {
     font-size: 18px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover {
         background-color: #d4af37;
@@ -81,7 +138,7 @@ body {
 }
 
 .numbers span.selected {
-    background-color: #b22222;
+    background-color: #e44f4f;
     color: white;
     font-weight: bold;
 }
@@ -132,8 +189,11 @@ body {
 /* Responsive */
 @media (max-width: 600px) {
     .container {
-        width: 95%;
         padding: 15px;
+    }
+
+    .quiz {
+        height: 101vh;
     }
 
     .question {
