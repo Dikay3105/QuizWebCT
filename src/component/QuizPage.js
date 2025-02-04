@@ -178,12 +178,12 @@ const QuizPage = () => {
 
                 <div className="navigation-buttons">
                     <button onClick={handlePreviousQuestion} disabled={currentQuestion === 0}>
-                        Previous
+                        Trước
                     </button>
                     {currentQuestion < questions.length - 1 ? (
-                        <button onClick={handleNextQuestion}>Next</button>
+                        <button onClick={handleNextQuestion}>TIếp</button>
                     ) : (
-                        <button onClick={handleSubmit}>Submit</button>
+                        <button onClick={handleSubmit}>Hoàn thành</button>
                     )}
                 </div>
 
