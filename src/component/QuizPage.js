@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./QuizPage.scss";
 import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
+import SortingHatPopup from "./SortingHatPopup";
 
 // Hàm xáo trộn mảng (Fisher-Yates shuffle)
 const shuffleArray = (array) => {
@@ -56,6 +57,14 @@ const QuizPage = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const audioRef = useRef(null);
+    const [resultMessage, setResultMessage] = useState("");
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [showResultPopup, setShowResultPopup] = useState(false);
+    const [showVideo, setShowVideo] = useState(true);
+    const videoRef = useRef(null);
+    const audioResultRef = useRef(null);
+    const [audioSrc, setAudioSrc] = useState("");
+
 
     useEffect(() => {
         if (isPlaying) {
@@ -69,6 +78,32 @@ const QuizPage = () => {
     useEffect(() => {
         setShuffledOptions(shuffleArray(questions[currentQuestion].options));
     }, [currentQuestion]);
+
+    useEffect(() => {
+        if (showResultPopup && videoRef.current) {
+            videoRef.current.play().catch((error) => {
+                console.log("Không thể tự động phát video:", error);
+            });
+        }
+    }, [showResultPopup]);
+
+    useEffect(() => {
+        if (showResultPopup && showVideo && videoRef.current) {
+            const playPromise = videoRef.current.play();
+            if (playPromise !== undefined) {
+                playPromise.catch((error) => {
+                    console.log("Trình duyệt chặn tự động phát video:", error);
+                });
+            }
+        }
+    }, [showResultPopup, showVideo]);
+
+    useEffect(() => {
+        if (!showVideo && audioResultRef.current) {
+            audioResultRef.current.play();
+        }
+    }, [showVideo]);
+
 
     const handleChooseAnswer = (answer) => {
         setAnswers((prev) => ({
@@ -95,12 +130,8 @@ const QuizPage = () => {
     };
 
     const handleSubmit = () => {
-        const unansweredQuestions = questions.filter(
-            (_, index) => !answers.hasOwnProperty(index)
-        );
-
-        if (unansweredQuestions.length > 0) {
-            setErrorMessage("Vui lòng trả lời tất cả các câu hỏi trước khi nộp.");
+        if (Object.keys(answers).length < questions.length) {
+            setErrorMessage("Vui lòng trả lời tất cả câu hỏi trước khi nộp.");
             return;
         }
 
@@ -111,25 +142,29 @@ const QuizPage = () => {
             const selectedAnswer = answers[index];
             const selectedOption = question.options.find((opt) => opt.text === selectedAnswer);
             if (selectedOption) {
-                if (selectedOption.type === "science") {
-                    scienceCount++;
-                } else if (selectedOption.type === "social") {
-                    socialCount++;
-                }
+                selectedOption.type === "science" ? scienceCount++ : socialCount++;
             }
         });
 
-        let resultMessage = "";
+        let result = "";
+        let audioPath = ""; // Đường dẫn audio phù hợp
+
         if (scienceCount > socialCount) {
-            resultMessage = "Bạn có tư duy khoa học nhiều hơn!";
+            result = "Chúc mừng con, con thuộc khối Khoa học tự nhiên";
+            audioPath = `${process.env.PUBLIC_URL}/KHTN.m4a`; // Audio cho khối khoa học tự nhiên
         } else if (socialCount > scienceCount) {
-            resultMessage = "Bạn có thiên hướng về xã hội nhiều hơn!";
+            result = "Chúc mừng con, con thuộc khối Khoa học xã hội";
+            audioPath = `${process.env.PUBLIC_URL}/KHXH.m4a`; // Audio cho khối khoa học xã hội
         } else {
-            resultMessage = "Bạn có sự cân bằng giữa khoa học và xã hội!";
+            result = "Bạn có sự cân bằng giữa khoa học và xã hội!";
+            audioPath = `${process.env.PUBLIC_URL}/Balanced.m4a`; // Audio cho trường hợp cân bằng
         }
 
-        alert(resultMessage);
+        setResultMessage(result);
+        setAudioSrc(audioPath); // Lưu đường dẫn audio
+        setShowResultPopup(true); // Hiển thị popup
     };
+
 
 
     return (
@@ -186,6 +221,36 @@ const QuizPage = () => {
                         <button onClick={handleSubmit}>Hoàn thành</button>
                     )}
                 </div>
+
+                {showResultPopup && (
+                    <div className="popup-overlay">
+                        <div className="popup-content">
+                            {showVideo ? (
+                                <video
+                                    ref={videoRef}
+                                    src={`${process.env.PUBLIC_URL}/hat.mp4`}
+                                    className="result-video"
+                                    autoPlay
+                                    onEnded={() => setShowVideo(false)} // Khi kết thúc video, hiện kết quả
+                                />
+                            ) : (
+                                <div className="result-message">
+                                    <h2>Kết Quả</h2>
+                                    <p>{resultMessage}</p>
+                                    <button onClick={() => {
+                                        setShowResultPopup(false);
+                                        window.location.reload()
+                                    }}>Đóng</button>
+
+                                    {/* Phát file audio phù hợp với kết quả */}
+                                    {audioSrc && <audio autoPlay src={audioSrc} />}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+
 
                 <audio ref={audioRef} loop>
                     <source src={`${process.env.PUBLIC_URL}/harry.mp3`} type="audio/mp3" />
