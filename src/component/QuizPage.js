@@ -48,6 +48,76 @@ const questions = [
             { text: "Làm việc nhóm, giao tiếp và hỗ trợ người khác", type: "social" },
         ],
     },
+    {
+        question: "Bạn có thế mạnh về kỹ năng nào hơn?",
+        options: [
+            { text: "Phân tích, tính toán, lập luận logic", type: "science" },
+            { text: "Viết lách, sáng tạo nội dung, biểu đạt ý tưởng", type: "social" },
+        ],
+    },
+    {
+        question: "Bạn có xu hướng ra quyết định dựa trên?",
+        options: [
+            { text: "Lý trí, tính khách quan", type: "science" },
+            { text: "Cảm xúc, sự đồng cảm", type: "social" },
+        ],
+    },
+    {
+        question: "Bạn có xu hướng nhớ thông tin theo cách nào?",
+        options: [
+            { text: "Ghi nhớ công thức, mô hình, số liệu", type: "science" },
+            { text: "Ghi nhớ câu chuyện, sự kiện, ý tưởng", type: "social" },
+        ],
+    },
+    {
+        question: "Nếu phải chọn, bạn thích nghiên cứu về?",
+        options: [
+            { text: "Hệ sinh thái, vũ trụ, trí tuệ nhân tạo", type: "science" },
+            { text: "Chính trị, tâm lý học, kinh tế", type: "social" },
+        ],
+    },
+    {
+        question: "Bạn có xu hướng nhớ lâu hơn?",
+        options: [
+            { text: "Công thức, dữ liệu số học", type: "science" },
+            { text: "Những câu chuyện, sự kiện lịch sử", type: "social" },
+        ],
+    },
+    {
+        question: "Khi chơi game, bạn thích kiểu nào hơn?",
+        options: [
+            { text: "Chiến thuật, logic, giải đố", type: "science" },
+            { text: "Phiêu lưu, cốt truyện, tương tác nhân vật", type: "social" },
+        ],
+    },
+    {
+        question: "Bạn thấy mình có khả năng tốt hơn về?",
+        options: [
+            { text: "Phân tích vấn đề, tư duy logic, hệ thống", type: "science" },
+            { text: "Thuyết phục, giao tiếp, lãnh đạo", type: "social" },
+        ],
+    },
+    {
+        question: "Bạn thấy hứng thú hơn với?",
+        options: [
+            { text: "Công nghệ, phát minh mới", type: "science" },
+            { text: "Xã hội, con người, văn hóa", type: "social" },
+        ],
+    },
+    {
+        question: "Khi học một điều mới, bạn thích?",
+        options: [
+            { text: "Tìm hiểu nguyên lý, cách hoạt động", type: "science" },
+            { text: "Hiểu ý nghĩa, ảnh hưởng đến con người", type: "social" },
+        ],
+    },
+    {
+        question: "Bạn thấy mình có khả năng nào nổi trội hơn?",
+        options: [
+            { text: "Suy luận, giải quyết vấn đề phức tạp", type: "science" },
+            { text: "Đồng cảm, hiểu tâm lý con người", type: "social" },
+        ],
+    },
 ];
 
 const QuizPage = () => {
@@ -150,10 +220,10 @@ const QuizPage = () => {
         let audioPath = ""; // Đường dẫn audio phù hợp
 
         if (scienceCount > socialCount) {
-            result = "Chúc mừng con, con thuộc khối Khoa học tự nhiên";
+            result = "Con thuộc khối Khoa học tự nhiên.";
             audioPath = `${process.env.PUBLIC_URL}/KHTN.m4a`; // Audio cho khối khoa học tự nhiên
         } else if (socialCount > scienceCount) {
-            result = "Chúc mừng con, con thuộc khối Khoa học xã hội";
+            result = "Con thuộc khối Khoa học xã hội.";
             audioPath = `${process.env.PUBLIC_URL}/KHXH.m4a`; // Audio cho khối khoa học xã hội
         } else {
             result = "Bạn có sự cân bằng giữa khoa học và xã hội!";
@@ -189,13 +259,17 @@ const QuizPage = () => {
                     {questions.map((_, index) => (
                         <span
                             key={index}
-                            className={currentQuestion === index ? "selected" : ""}
+                            className={`
+                ${currentQuestion === index ? "selected" : ""}
+                ${answers[index] ? "answered" : ""}
+            `}
                             onClick={() => handleSelectQuestion(index)}
                         >
                             {index + 1}
                         </span>
                     ))}
                 </div>
+
 
                 <div className="question">{questions[currentQuestion].question}</div>
 
@@ -225,27 +299,34 @@ const QuizPage = () => {
                 {showResultPopup && (
                     <div className="popup-overlay">
                         <div className="popup-content">
-                            {showVideo ? (
-                                <video
-                                    ref={videoRef}
-                                    src={`${process.env.PUBLIC_URL}/hat.mp4`}
-                                    className="result-video"
-                                    autoPlay
-                                    onEnded={() => setShowVideo(false)} // Khi kết thúc video, hiện kết quả
-                                />
-                            ) : (
-                                <div className="result-message">
-                                    <h2>Kết Quả</h2>
-                                    <p>{resultMessage}</p>
-                                    <button onClick={() => {
-                                        setShowResultPopup(false);
-                                        window.location.reload()
-                                    }}>Đóng</button>
 
-                                    {/* Phát file audio phù hợp với kết quả */}
-                                    {audioSrc && <audio autoPlay src={audioSrc} />}
+                            <div className="result-message">
+                                <div className="result-image">
+                                    <img src={`${process.env.PUBLIC_URL}/hat.png`} alt="Hat" />
                                 </div>
-                            )}
+                                <div className="result-text">
+                                    <div class="thought">
+                                        <div>Chúc mừng con!</div>
+
+                                        {resultMessage}
+                                    </div>
+                                    {/* <h2>Kết Quả</h2>
+                                    <p>{resultMessage}</p> */}
+                                </div>
+
+                                {audioSrc && <audio autoPlay src={audioSrc} />}
+                            </div>
+                            <div className="result-button">
+                                <button
+                                    className="popup-button"
+                                    onClick={() => {
+                                        setShowResultPopup(false);
+                                        window.location.reload();
+                                    }}>
+                                    Đóng
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 )}
