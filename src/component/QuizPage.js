@@ -181,7 +181,14 @@ const QuizPage = () => {
             [currentQuestion]: answer,
         }));
         setErrorMessage(""); // Xóa lỗi nếu đã chọn
+        // Nếu chưa phải câu cuối -> Tự động chuyển câu sau 0.5s
+        if (currentQuestion < questions.length - 1) {
+            setTimeout(() => {
+                setCurrentQuestion((prev) => prev + 1);
+            }, 500); // Delay để nhìn thấy hiệu ứng chọn
+        }
     };
+
 
     const handleSelectQuestion = (index) => {
         setCurrentQuestion(index);
@@ -290,7 +297,7 @@ const QuizPage = () => {
                         Trước
                     </button>
                     {currentQuestion < questions.length - 1 ? (
-                        <button onClick={handleNextQuestion}>TIếp</button>
+                        <button onClick={handleNextQuestion}>Tiếp</button>
                     ) : (
                         <button onClick={handleSubmit}>Hoàn thành</button>
                     )}
@@ -305,10 +312,17 @@ const QuizPage = () => {
                                     <img src={`${process.env.PUBLIC_URL}/hat.png`} alt="Hat" />
                                 </div>
                                 <div className="result-text">
-                                    <div class="thought">
+                                    {/* <div class="thought">
                                         <div>Chúc mừng con!</div>
 
                                         {resultMessage}
+                                    </div> */}
+                                    <div class="talk-bubble tri-right border round btm-left-in">
+                                        <div class="talktext" style={{ textAlign: "center" }}>
+                                            <div>Chúc mừng con!</div>
+
+                                            {resultMessage}
+                                        </div>
                                     </div>
                                     {/* <h2>Kết Quả</h2>
                                     <p>{resultMessage}</p> */}
