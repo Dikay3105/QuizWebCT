@@ -97,12 +97,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-
-    &:hover {
-        background-color: #d4af37;
-        color: black;
-        transform: scale(1.02);
-    }
 }
 
 .option.selected {
